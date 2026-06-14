@@ -9,7 +9,7 @@ using Microsoft.Maui.Controls;
 
 namespace AIChatBotAppRAG.ViewModels
 {
-    public partial class ChatViewModel : ObservableObject
+    public partial class ChatViewModel : BaseViewModel
     {
         private readonly DatabaseHelper _dbHelper;
         private readonly ChatBotService _chatBotService;
@@ -19,6 +19,9 @@ namespace AIChatBotAppRAG.ViewModels
         private string messageText = string.Empty;
 
         [ObservableProperty]
+        private bool isUseRag = false;
+    
+        [ObservableProperty]
         private ObservableCollection<Message> messages = new();
 
         [ObservableProperty]
@@ -27,7 +30,7 @@ namespace AIChatBotAppRAG.ViewModels
         [ObservableProperty]
         private bool isConversationPopupVisible;
 
-        public ChatViewModel(DatabaseHelper dbHelper, ChatBotService chatBotService)
+        public ChatViewModel(DatabaseHelper dbHelper, ChatBotService chatBotService) : base(dbHelper, chatBotService)
         {
             _dbHelper = dbHelper;
             _chatBotService = chatBotService;
@@ -73,7 +76,7 @@ namespace AIChatBotAppRAG.ViewModels
                  Model = "abacusai/dracarys-llama-3.1-70b-instruct",
                  Provider = "Nvidia",
                  InputType = "query",
-                 UseRag = true
+                 UseRag = IsUseRag
              };
 
             Messages.Add(userMessage);
@@ -84,7 +87,8 @@ namespace AIChatBotAppRAG.ViewModels
             var botMessage = new Message
             {
                 ConversationId = _currentConversation.Id,
-                Content = response,
+                Content = response.Item1,
+                Source = response.Item2,
                 IsUser = false,
                 Timestamp = DateTime.Now
             };
@@ -92,7 +96,7 @@ namespace AIChatBotAppRAG.ViewModels
             Messages.Add(botMessage);
             await _dbHelper.SaveMessageAsync(botMessage);
 
-            if (Messages.Count <= 2)
+            if (Messages.Count >= 1)
             {
                 _currentConversation.Title = MessageText.Length > 20 ? MessageText.Substring(0, 20) + "..." : MessageText;
                 await _dbHelper.SaveConversationAsync(_currentConversation);
@@ -106,6 +110,8 @@ namespace AIChatBotAppRAG.ViewModels
         [RelayCommand]
         private void ShowConversations()
         {
+            System.Diagnostics.Debug.WriteLine(
+        $"Conversation Count: {Conversations.Count}");
             IsConversationPopupVisible = true;
         }
 

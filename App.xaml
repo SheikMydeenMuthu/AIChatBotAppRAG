@@ -14,6 +14,7 @@
             <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
             <converters:AlignmentConverter x:Key="AlignmentConverter"/>
             <converters:StringToBoolConverter x:Key="StringToBoolConverter"/>
+            <converters:BoolInverseConverter x:Key="BoolInverseConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

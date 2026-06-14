@@ -10,6 +10,8 @@ namespace AIChatBotAppRAG.Models
         public int ConversationId { get; set; }
         public string Content { get; set; } = string.Empty;
         public bool IsUser { get; set; }
+        public string Source { get; set; } = string.Empty;
+
         public DateTime Timestamp { get; set; }
     }
 }

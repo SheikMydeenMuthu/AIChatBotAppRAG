@@ -6,7 +6,7 @@ using Microsoft.Maui.Controls;
 
 namespace AIChatBotAppRAG.ViewModels
 {
-    public partial class LoginViewModel : ObservableObject
+    public partial class LoginViewModel : BaseViewModel
     {
         private readonly DatabaseHelper _dbHelper;
 
@@ -19,7 +19,7 @@ namespace AIChatBotAppRAG.ViewModels
         [ObservableProperty]
         private string errorMessage = string.Empty;
 
-        public LoginViewModel(DatabaseHelper dbHelper)
+        public LoginViewModel(DatabaseHelper dbHelper): base(dbHelper, null)
         {
             _dbHelper = dbHelper;
         }
@@ -34,7 +34,7 @@ namespace AIChatBotAppRAG.ViewModels
             }
 
             ErrorMessage = string.Empty;
-            await Shell.Current.GoToAsync("//ChatPage");
+            Application.Current!.Windows[0].Page = new AppShell();
         }
     }
 }

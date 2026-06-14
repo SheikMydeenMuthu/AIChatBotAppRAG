@@ -18,7 +18,7 @@ namespace AIChatBotAppRAG.Services
             _httpClient = new HttpClient();
         }
 
-        public async Task<string> SendMessageAsync(ChatRequest chatRequest)
+        public async Task<Tuple<string, string>> SendMessageAsync(ChatRequest chatRequest)
         {
             try
             {
@@ -33,13 +33,17 @@ namespace AIChatBotAppRAG.Services
                 using var doc = JsonDocument.Parse(responseJson);
                 if (doc.RootElement.TryGetProperty("aiResponse", out var responseProp))
                 {
-                    return responseProp.GetString();
+                    var aiResponse = responseProp.GetString();
+                    var source = doc.RootElement.TryGetProperty("mode", out var sourceProp) ? sourceProp.GetString() : string.Empty;
+                    return Tuple.Create(aiResponse, source);
                 }
-                return "Sorry, I couldn't process that.";
+
+    
+                return Tuple.Create("Sorry, I couldn't process that.", string.Empty);
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}";
+                return Tuple.Create($"Error: {ex.Message}", string.Empty);
             }
         }
 

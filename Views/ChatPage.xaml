@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AIChatBotAppRAG.Views.ChatPage"
-             Title="AI Chat Bot">
+             x:Class="AIChatBotAppRAG.Views.ChatPage">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <!-- Header with Hamburger Menu -->
-        <HorizontalStackLayout Grid.Row="0" BackgroundColor="Blue" Padding="10">
-            <Button Text="☰" Command="{Binding ShowConversationsCommand}" 
-                    TextColor="White" BackgroundColor="Transparent" FontSize="20"/>
-            <Label Text="AI Chat Bot" TextColor="White" FontSize="20" 
-                   VerticalOptions="Center"/>
-        </HorizontalStackLayout>
+
+       <!-- Header with Hamburger Menu -->
+<Grid Grid.Row="0" BackgroundColor="Blue" Padding="10"
+      ColumnDefinitions="Auto,*,Auto">
+    <Button Text="☰" Command="{Binding ShowConversationsCommand}" 
+            TextColor="White" BackgroundColor="Transparent" FontSize="20"/>
+    <Label Grid.Column="1" Text="AI Chat Bot" TextColor="White" FontSize="20" 
+           VerticalOptions="Center"/>
+    <HorizontalStackLayout Grid.Column="2"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Spacing="10">
+    <Label Text="Use RAG"
+           TextColor="White"
+           VerticalOptions="Center"/>
+    <Switch IsToggled="{Binding IsUseRag}"
+            VerticalOptions="Center"/>
+</HorizontalStackLayout>
+</Grid>
         
         <!-- Chat Messages -->
         <ScrollView Grid.Row="1">
@@ -24,12 +34,16 @@
                 <CollectionView ItemsSource="{Binding Messages}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
+                            <VerticalStackLayout>
                             <Border StrokeShape="RoundRectangle 10"
                                     BackgroundColor="{Binding IsUser, Converter={StaticResource BoolToColorConverter}}" 
                                     HorizontalOptions="{Binding IsUser, Converter={StaticResource AlignmentConverter}}"
                                     Margin="5">
                                 <Label Text="{Binding Content}" TextColor="Black" Padding="10"/>
                             </Border>
+                            <Label Text="{Binding Source, StringFormat='Source: {0}'}" TextColor="Gray" FontSize="12" Padding="10,0,10,0" HorizontalOptions="{Binding IsUser, Converter={StaticResource AlignmentConverter}}"
+                                   IsVisible="{Binding IsUser,Converter={StaticResource BoolInverseConverter}}"/>
+                            </VerticalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -63,7 +77,8 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="{Binding Title}" VerticalOptions="Center">
+                                <Label Grid.Column="0" Text="{Binding Title}" VerticalOptions="Center"
+                                    TextColor="Black">
                                     <Label.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectConversationCommand}" 
                                             CommandParameter="{Binding .}"/>

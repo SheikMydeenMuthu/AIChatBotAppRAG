@@ -4,12 +4,13 @@
        xmlns:views="clr-namespace:AIChatBotAppRAG.Views"
        x:Class="AIChatBotAppRAG.AppShell"
        Shell.FlyoutBehavior="Disabled">
-    
-    <ShellContent Route="LoginPage"
-                  ContentTemplate="{DataTemplate views:LoginPage}"
-                  FlyoutItemIsVisible="False"/>
-    
-    <ShellContent Route="ChatPage"
-                  ContentTemplate="{DataTemplate views:ChatPage}"
-                  FlyoutItemIsVisible="False"/>
+       
+    <Tab Title="Chat" Icon="ic_chat.png">
+        <ShellContent ContentTemplate="{DataTemplate views:ChatPage}" />
+    </Tab>
+
+    <Tab Title="Settings" Icon="ic_settings.png">
+        <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" />
+    </Tab>
+
 </Shell>
